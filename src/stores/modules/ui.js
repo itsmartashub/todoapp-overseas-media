@@ -6,7 +6,10 @@ export default {
 			text: "Notification placeholder text",
 			timeout: 3000,
 			className: 'success'
-		}
+		},
+
+		displaySearchList: false,
+		newListForm: false
 	},
 
 
@@ -17,6 +20,14 @@ export default {
 
 		NOTIFICATION: state => {
 			return state.notification
+		},
+
+		DISPLAY_SEARCH_LIST: state => {
+			return state.displaySearchList
+		},
+
+		NEW_LIST_FORM: state => {
+			return state.newListForm
 		}
 	}, // getters samo dohvataju podatke iz state
 
@@ -30,6 +41,14 @@ export default {
 			state.notification.display = display
 			state.notification.text = tekst,
 			state.notification.className = alertClass
+		},
+
+		SET_DISPLAY_SEARCH_LIST: (state, payload) => { // payload ce biti true ili false
+			state.displaySearchList = payload
+		},
+
+		SET_NEW_LIST_FORM: (state, payload) => { // payload ce biti true ili false
+			state.newListForm = payload
 		}
 	}, // use mutations to change state properties
 
