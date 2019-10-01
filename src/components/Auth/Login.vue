@@ -22,7 +22,7 @@
 								Sign up
 							</v-btn>
 							<v-spacer></v-spacer>
-							<v-btn rounded color="primary" dark>
+							<v-btn rounded color="primary" dark @click.prevent="login()">
 								Login
 								<v-icon>mdi-chevron-right</v-icon>
 							</v-btn>
@@ -36,7 +36,13 @@
 
 <script>
 export default {
-	name: "login"
+	name: "login",
+
+	methods: {
+		login() {
+			this.$router.push('/')
+		}
+	}
 }
 </script>
 

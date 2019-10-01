@@ -66,9 +66,9 @@
 										Login
 									</v-btn>
 									<v-spacer></v-spacer>
-									<v-btn rounded color="success">
+									<v-btn rounded color="success" @click.prevent="register()">
 										Register
-										<v-icon>chevron-right</v-icon>
+										<v-icon>mdi-chevron-right</v-icon>
 									</v-btn>
 								</v-card-actions>
 							</v-form>
@@ -96,9 +96,14 @@ export default {
 	}),
 
 	methods: {
+
 		valid() {
 			return this.password === this.confirm_password
-		}
+		},
+		
+		register() {
+			this.$router.push('/login')
+		},
 	}
 }
 </script>

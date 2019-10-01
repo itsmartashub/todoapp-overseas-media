@@ -7,11 +7,15 @@
 				</v-flex>
 
 				<v-flex lg6 pr-2 pl-2>
-					<Tasks />
+					<!-- <Tasks /> -->
+					<!-- Umesto ovog cemo koristiti router-view -->
+					<router-view name="tasks" :key="$route.fullPath"/>
+					<!-- sa name="tasks" govorimo router-view koji komponent da koristi/otvori/naviguje. E sad, prilikom tog klika na odjerenu listu sa taskovima, moze da se desi da se ne desi taj apdejt komponente prilikom konekcije sa serverom preko ajaxa, i zato bi trebalo ovom router-view da sibnemo nesto originalno za key a to je recimo fullPath rute, da bi znao da treba drugu komponent da ucita (tj istu, ali sa drugim podacima, tipa lista sa drugim id-em) -->
 				</v-flex>
 
 				<v-flex lg3 pl-2>
-					<OptionsBar />
+					<!-- a ovaj necemo preko router-viewa vec preko vuexa -->
+					<!-- <OptionsBar /> -->
 				</v-flex>
 
 			</v-layout>

@@ -1,7 +1,7 @@
 <template>
 	<v-list-item @click.prevent="toggle(index)">
 		<v-list-item-action>
-			<v-btn icon>
+			<v-btn icon @click.prevent="openModal()">
 				<v-icon color="pink">mdi-pencil</v-icon>
 			</v-btn>
 		</v-list-item-action>
@@ -41,8 +41,15 @@ export default {
 
 	methods: {
 		toggle(i) {
-			console.log(i)
+			console.log('toggle f-on: ' +i)
 			// TODO push the changes to the store
+		},
+
+		openModal() {
+			this.$router.push({
+				name: 'notes',
+				params: { taskID: this.task.id }
+			})
 		}
 	}
 }

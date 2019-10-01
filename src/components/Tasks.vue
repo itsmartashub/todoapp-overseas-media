@@ -3,9 +3,7 @@
 		<v-card style="height: calc(100vh - 36px); overflow: hidden">
 
 			<v-toolbar color="blue" dark>
-				<v-toolbar-title>
-					Title of the list
-				</v-toolbar-title>
+				<v-toolbar-title>Title of the list {{ listID }} </v-toolbar-title>
 
 				<v-spacer></v-spacer>
 
@@ -36,7 +34,8 @@
 
 		</v-card>
 
-		<NotesModal />
+		<!-- <NotesModal /> -->
+		<router-view :key="$route.fullPath" name="notes" />
 	</div>
 
 </template>
@@ -59,72 +58,78 @@ export default {
 				isComplete: true
 			},
 			{
-				id: 1,
+				id: 2,
 				title: "task title",
 				subtitle: "This task contains 8 notes",
 				isComplete: false
 			},
 			{
-				id: 1,
+				id: 3,
 				title: "task title",
 				subtitle: "This task contains 8 notes",
 				isComplete: false
 			},
 			{
-				id: 1,
+				id: 4,
 				title: "task title",
 				subtitle: "This task contains 8 notes",
 				isComplete: true
 			},
 			{
-				id: 1,
+				id: 5,
 				title: "task title",
 				subtitle: "This task contains 8 notes",
 				isComplete: true
 			},
 			{
-				id: 1,
+				id: 6,
 				title: "task title",
 				subtitle: "This task contains 8 notes",
 				isComplete: false
 			},
 			{
-				id: 1,
+				id: 7,
 				title: "task title",
 				subtitle: "This task contains 8 notes",
 				isComplete: true
 			},
 			{
-				id: 1,
+				id: 8,
 				title: "task title",
 				subtitle: "This task contains 8 notes",
 				isComplete: false
 			},
 			{
-				id: 1,
+				id: 9,
 				title: "task title",
 				subtitle: "This task contains 8 notes",
 				isComplete: false
 			},
 			{
-				id: 1,
+				id: 10,
 				title: "task title",
 				subtitle: "This task contains 8 notes",
 				isComplete: true
 			},
 			{
-				id: 1,
+				id: 11,
 				title: "task title",
 				subtitle: "This task contains 8 notes",
 				isComplete: true
 			},
 			{
-				id: 1,
+				id: 12,
 				title: "task title",
 				subtitle: "This task contains 8 notes",
 				isComplete: false
 			}
 		]
-	})
+	}),
+
+	computed: {
+		listID () { //! it looks like a function but its not!
+			return this.$route.params.id
+		}
+	}
 }
 </script>
