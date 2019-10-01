@@ -15,7 +15,7 @@
 
 				<v-flex lg3 pl-2>
 					<!-- a ovaj necemo preko router-viewa vec preko vuexa -->
-					<!-- <OptionsBar /> -->
+					<OptionsBar />
 				</v-flex>
 
 			</v-layout>
@@ -29,6 +29,8 @@
 				</v-flex>
 			</v-layout>
 		</v-footer>
+
+		<Notification />
 	</div>
 </template>
 
@@ -36,10 +38,11 @@
 import Lists from './Lists'
 import Tasks from './Tasks'
 import OptionsBar from './OptionsBar'
+import Notification from './Notification'
 
 export default {
 	name: "todo",
-	components: { Lists, Tasks, OptionsBar }
+	components: { Lists, Tasks, OptionsBar, Notification }
 }
 </script>
 

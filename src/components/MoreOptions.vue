@@ -50,12 +50,23 @@
 export default {
 	name: "moreOptions",
 	data: () => ({
-		open: false,
+		// open: false,
 		loading: false,
 		imageUrl: '',
 		imageName: '',
 		imageFile: ''
 	}),
+
+	computed: { // computed propertiji samo izgledaju kao f-ions ali nisu, koriste se i pozivaju kao data tj podaci
+		open: { // s obz da kor set i get ne stavljamo open() vec open:
+			get () {
+				return this.$store.getters.DRAWER // DRAWER pozivamo bez (). getters mora da se RETURN
+			},
+			set (val) {
+				this.$store.commit('SET_DRAWER', val) // ovo ce biti payload u SET_DRAWER
+			}
+		}
+	},
 
 	methods: {
 		pickFile() {

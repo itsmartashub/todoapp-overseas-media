@@ -1,8 +1,9 @@
 <template>
-	<div>
+	<div v-if="show">
 		<v-card style="height: calc(100vh - 36px);" >
 			<v-toolbar color="pink" dark>
-				<v-toolbar-title>Options</v-toolbar-title>
+				<v-toolbar-title>Options {{ drawer }}</v-toolbar-title>
+				<!-- ovo {{ drawer }} je samo za debug purpose -->
 			</v-toolbar>
 
 			<v-list>
@@ -37,17 +38,17 @@
 				<v-list-group prepend-icon="mdi-image-filter-none" no-action>
 					<v-list-item slot="activator">
 						<v-list-item-content>
-							<v-list-item-title>List title</v-list-item-title>
+							<v-list-item-title>List options</v-list-item-title>
 						</v-list-item-content>
 					</v-list-item>
 
-					<v-list-item>
+					<v-list-item @click="displayNotification()">
 						<v-list-item-content>
 							<v-list-item-title>Remove list</v-list-item-title>
 						</v-list-item-content>
 					</v-list-item>
 
-					<v-list-item>
+					<v-list-item @click.prevent="openDrawer()">
 						<v-list-item-content>
 							<v-list-item-title>Change background</v-list-item-title>
 						</v-list-item-content>
@@ -109,6 +110,16 @@ export default {
 		]
 	}),
 
+	computed: {
+		show () {
+			return this.$route.params.id
+		},
+
+		drawer () {
+			return this.$store.getters.DRAWER
+		}
+	},
+
 	methods: {
 		sort(value) {
 			console.log("Sort by " + value);
@@ -116,6 +127,19 @@ export default {
 
 		filter(value) {
 			console.log("Filter by " + value);
+		},
+
+		openDrawer() {
+			this.$store.commit('SET_DRAWER', true) // kada god kliknemo na 'change backgound' drawer se otvori, ttj on je true, ovo prihvatamo u stores/modules/ui.js u mutations u SET_DRAWER f-ji, true mu dodje tamo payload
+		},
+
+		displayNotification() {
+			this.$store.commit('SET_NOTIFICATION', {
+				display: true,
+				tekst: 'List removed!',
+				timeout: 3000,
+				alertClass: 'success'
+			}) 
 		}
 	}
 }
