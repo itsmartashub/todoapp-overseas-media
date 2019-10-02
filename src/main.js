@@ -9,6 +9,8 @@ import vuetify from './plugins/vuetify';
 Vue.config.productionTip = false
 
 axios.defaults.baseURL = 'http://localhost:8000/api/' // jbg, ja nemam backend sumfony api i sad sve dalji kod ne vredi, ne mogu da testiram
+axios.defaults.withCredentials = true
+
 
 new Vue({
   router,

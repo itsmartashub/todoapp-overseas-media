@@ -27,7 +27,29 @@ export default {
 
 	methods: {
 		submit() {
-			console.log("submitted");
+			// console.log("submitted");
+			this.$store.dispatch('POST_LIST', {
+				title: this.title
+			})
+			// .then(response => {
+			.then(({ data }) => {
+				this.$store.commit('SET_NOTIFICATION', {
+					display: true,
+					tekst: 'List has been created!',
+					alertClass: 'success'
+				})
+
+				this.title = ''
+				this.$router.push({
+					name: 'tasks',
+					params: {
+						// id: response.data.id
+						id: data.id
+					}
+				})
+
+				this.$store.commit('SET_NEW_LIST_FORM', false)
+			})
 		},
 
 		closeForm() {

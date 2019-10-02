@@ -35,7 +35,7 @@
 
 		<v-list style="height: 80vh; overflow-y: scroll">
 			<v-list-item
-				v-for="(list, key) in lists"
+				v-for="(list, key) in LISTS"
 				v-bind:key="key"
 				:to="{ name: 'tasks', params: {id: list.id} }"
 			>
@@ -45,7 +45,7 @@
 				</v-list-item-content>
 
 				<v-list-item-action>
-					<v-list-item-title>{{ list.tasks }}</v-list-item-title>
+					<v-list-item-title>{{ TASKS_COUNT(list.id) }}</v-list-item-title>
 				</v-list-item-action>
 
 			</v-list-item>
@@ -66,114 +66,114 @@ export default {
 
 	data: () => ({
 		// isOpen: false, // 'premesteno' u computed
-		lists: [
-			{
-				id: 1,
-				title: "List",
-				tasks: 12
-			},
+		// lists: [
+		// 	{
+		// 		id: 1,
+		// 		title: "List",
+		// 		tasks: 12
+		// 	},
 
-			{
-				id: 2,
-				title: "List",
-				tasks: 45
-			},
-			{
-				id: 3,
-				title: "List",
-				tasks: 66
-			},
-			{
-				id: 4,
-				title: "List",
-				tasks: 7
-			},
-			{
-				id: 5,
-				title: "List",
-				tasks: 9
-			},{
-				id: 1,
-				title: "List",
-				tasks: 12
-			},
+		// 	{
+		// 		id: 2,
+		// 		title: "List",
+		// 		tasks: 45
+		// 	},
+		// 	{
+		// 		id: 3,
+		// 		title: "List",
+		// 		tasks: 66
+		// 	},
+		// 	{
+		// 		id: 4,
+		// 		title: "List",
+		// 		tasks: 7
+		// 	},
+		// 	{
+		// 		id: 5,
+		// 		title: "List",
+		// 		tasks: 9
+		// 	},{
+		// 		id: 1,
+		// 		title: "List",
+		// 		tasks: 12
+		// 	},
 
-			{
-				id: 2,
-				title: "List",
-				tasks: 45
-			},
-			{
-				id: 3,
-				title: "List",
-				tasks: 66
-			},
-			{
-				id: 4,
-				title: "List",
-				tasks: 7
-			},
-			{
-				id: 5,
-				title: "List",
-				tasks: 9
-			},
-			{
-				id: 1,
-				title: "List",
-				tasks: 12
-			},
+		// 	{
+		// 		id: 2,
+		// 		title: "List",
+		// 		tasks: 45
+		// 	},
+		// 	{
+		// 		id: 3,
+		// 		title: "List",
+		// 		tasks: 66
+		// 	},
+		// 	{
+		// 		id: 4,
+		// 		title: "List",
+		// 		tasks: 7
+		// 	},
+		// 	{
+		// 		id: 5,
+		// 		title: "List",
+		// 		tasks: 9
+		// 	},
+		// 	{
+		// 		id: 1,
+		// 		title: "List",
+		// 		tasks: 12
+		// 	},
 
-			{
-				id: 2,
-				title: "List",
-				tasks: 45
-			},
-			{
-				id: 3,
-				title: "List",
-				tasks: 66
-			},
-			{
-				id: 4,
-				title: "List",
-				tasks: 7
-			},
-			{
-				id: 5,
-				title: "List",
-				tasks: 9
-			},{
-				id: 1,
-				title: "List",
-				tasks: 12
-			},
+		// 	{
+		// 		id: 2,
+		// 		title: "List",
+		// 		tasks: 45
+		// 	},
+		// 	{
+		// 		id: 3,
+		// 		title: "List",
+		// 		tasks: 66
+		// 	},
+		// 	{
+		// 		id: 4,
+		// 		title: "List",
+		// 		tasks: 7
+		// 	},
+		// 	{
+		// 		id: 5,
+		// 		title: "List",
+		// 		tasks: 9
+		// 	},{
+		// 		id: 1,
+		// 		title: "List",
+		// 		tasks: 12
+		// 	},
 
-			{
-				id: 2,
-				title: "List",
-				tasks: 45
-			},
-			{
-				id: 3,
-				title: "List",
-				tasks: 66
-			},
-			{
-				id: 4,
-				title: "List",
-				tasks: 7
-			},
-			{
-				id: 5,
-				title: "List",
-				tasks: 9
-			}
-		]
+		// 	{
+		// 		id: 2,
+		// 		title: "List",
+		// 		tasks: 45
+		// 	},
+		// 	{
+		// 		id: 3,
+		// 		title: "List",
+		// 		tasks: 66
+		// 	},
+		// 	{
+		// 		id: 4,
+		// 		title: "List",
+		// 		tasks: 7
+		// 	},
+		// 	{
+		// 		id: 5,
+		// 		title: "List",
+		// 		tasks: 9
+		// 	}
+		// ]
 	}),
 
 	computed: {
-		...mapGetters(['DISPLAY_SEARCH_LIST']),
+		...mapGetters(['DISPLAY_SEARCH_LIST', 'LISTS']),
 
 		openNewListFormValue: {
 			get () {
@@ -196,7 +196,16 @@ export default {
 
 		openNewListForm() {
 			this.$store.commit('SET_NEW_LIST_FORM', true)
+		},
+
+		TASKS_COUNT(index) {
+			return this.$store.getters.TASKS_COUNT(index)
 		}
+	},
+
+	mounted () {
+		// kada je komponenta mounted tj kreirana i ucitana/namontirana onda zelimo da fetchujemo listu korisnika
+		this.$store.dispatch('GET_LISTS')
 	}
 }
 </script>
