@@ -10,10 +10,18 @@
 							</v-toolbar-title>
 						</v-toolbar>
 
+						<v-alert
+							color="error"
+							:value="error"
+							icon="mdi-close"
+						>
+							The username or the password are incorrect.
+						</v-alert>
+
 						<v-card-text>
-							<v-text-field prepend-icon="mdi-person" name="login" label="Login" type="text"></v-text-field>
+							<v-text-field v-model="username" prepend-icon="mdi-person" name="login" label="Login" type="text"></v-text-field>
 							
-							<v-text-field prepend-icon="mdi-lock" name="password" label="Password" type="password"></v-text-field>
+							<v-text-field v-model="password" prepend-icon="mdi-lock" name="password" label="Password" type="password"></v-text-field>
 						</v-card-text>
 						<v-divider></v-divider>
 
@@ -38,9 +46,25 @@
 export default {
 	name: "login",
 
+	data: () => ({
+		username: '',
+		password: '',
+		error: false
+	}),
+
 	methods: {
 		login() {
-			this.$router.push('/')
+			// this.$router.push('/')
+			this.$store.dispatch('LOGIN', {
+				username: this.username,
+				password: this.password
+			})
+			.then(success => {
+				this.$router.push('/')
+			})
+			.catch(err => {
+				this.error = true
+			})
 		}
 	}
 }

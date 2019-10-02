@@ -13,7 +13,7 @@
 						<v-card-text>
 							<v-form>
 								<v-alert
-									:value="true"
+									:value="userExists"
 									color="error"
 									icon="mdi-alert" 
 								>
@@ -26,6 +26,7 @@
 									label="Signup"
 									type="text"
 									:rules="[rules.required]"
+									v-model="username"
 								>
 								</v-text-field>
 
@@ -35,6 +36,7 @@
 									label="Email"
 									type="email"
 									:rules="[rules.required, rules.email]"
+									v-model="email"
 								>
 								</v-text-field>
 
@@ -84,6 +86,9 @@
 <script>
 export default {
 	data: () => ({
+		userExists: false, // ako vec postoji korisnik sa tim i tim podacima, setujemo ovo u true, i povezujemo to gore sa v-alert da se prikaze ako je ovo true
+		username: '',
+		email: '',
 		password: '',
 		confirm_password: '',
 		rules: {
@@ -102,7 +107,25 @@ export default {
 		},
 		
 		register() {
-			this.$router.push('/login')
+			if(this.valid()) {
+				this.$store.dispatch('REGISTER', {
+					username: this.username,
+					email: this.email,
+					password: this.password
+				})
+				.then(({ status }) => {
+					this.$store.commit('SET_NOTIFICATION', {
+						display: true,
+						tekst: 'Your account has been successfully created! You can now login',
+						alertClass: 'danger' // TODO: check if the class is being changed
+					})
+
+				this.$router.push('/login')
+				})
+				.catch(err => {
+					this.userExists = true
+				})
+			}
 		},
 	}
 }
