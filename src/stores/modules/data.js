@@ -1,13 +1,29 @@
+import Vue from 'vue'
 import axios from 'axios'
+import _ from 'lodash'
 
 export default {
 	state: {
-		lists: []
+		lists: [],
+		curatedLists: []
+
 	},
 
 	getters: {
 		LISTS: state => {
 			return state.lists
+		},
+
+		CURATED_LISTS: (state, getters, rootState) => { // rootState je ako zelimo da pristupimo root state-u, onom u store.js valjda, pa kao svakom stateu koriscenom u vuexu
+			if (!state.curatedLists.length && rootState.search.listSearch === '') { // umesto .search.listSearch smo mogli. rootGetters.LIST_SEARCH valjda. Elem ovo prvo if znaci da akoje curatedLists prazna, i ako nemam neku search vrednost onda mi samo daj listu svih tj state.lists
+				return state.lists
+
+			} else if (state.curatedLists.length && rootState.search.listSearch !== '') {
+				return state.curatedLists
+
+			} else if (rootState.search.listSearch === '') {
+				return state.curatedLists
+			}
 		},
 
 		TASKS_COUNT: state => index => {
@@ -24,7 +40,8 @@ export default {
 
 		TASKS: state => index => {
 			if (index) {
-				return stata.lists.find(list => list.id === index).tasks
+				// return stata.lists.find(list => list.id === index).tasks
+				return stata.lists.find(list => list.id === index).curatedTasks
 			}
 		},
 
@@ -40,13 +57,6 @@ export default {
 			return state.lists
 				.find(list => list.id === listId) // find the list
 				.tasks.find(task => task.id === taskId).notes
-		},
-
-		NOTES_COUNT: state => (listId, taskId) => {
-			// get the length of the notes that i have
-			// state.lists
-			// 	.find(list => list.id === listId) // find the list
-			// 	.tasks.find(task => task.id === taskId).notes.length
 		}
 
 	},
@@ -60,7 +70,12 @@ export default {
 			state.lists.unshift(payload)
 		},
 
+		// SET_TASKS: (state, {data, listID}) => {
+		// 	state.lists.find(list => list.id === listID).tasks = data
+		// },
+		
 		SET_TASKS: (state, {data, listID}) => {
+			Vue.set(state.lists.find(list => list.id === listID), 'curatedTasks', data) // object, key string ili number, value
 			state.lists.find(list => list.id === listID).tasks = data
 		},
 
@@ -117,7 +132,66 @@ export default {
 			if (listId && title) {
 				state.lists.find(list => list.id === listId).title = title
 			}
+		},
+
+		SET_CURATED_LIST: (state, payload) => {
+			state.curatedLists = payload
+		},
+
+		SET_LIST_SORT_VALUE: (state, {value, listId}) => {
+			state.lists.find(list => list.id === listId).preferences.sortValue = value // ovo preferences.sortValue je iz backenda njegovog restful api-a
+		},
+
+		SORT_LIST_BY: (state, {value, listId}) => {
+			let tasks = state.lists.find(list => list.id === listId).tasks
+
+			let rs = []
+
+			switch (value) {
+				case 'name':
+					rs = _.sortBy(tasks, task => { // ovo je lodash metod, sortBy za prvo argument uzima niz koji zelimo da soretiramo, a za srugi je callback f-ja koju cemo da koristimo za to
+						return task.title
+					})
+					break
+				case 'date':
+					rs = _.sortBy(tasks, task => {
+						return task.createdAt
+					})
+					break
+			}
+
+			state.lists.find(list => list.id === listId).curatedTasks = [...rs]
+		},
+
+		SET_LIST_FILTER_VALUE: (state, {value, listId}) => {
+			state.lists.find(list => list.id === listId).preferences.filterValue = value // ovo preferences.filterValue je iz backenda njegovog restful api-a
+		},
+
+		FILTER_LIST_BY: (state, {filter_query, listId}) => {
+			let tasks = state.lists.find(list => list.id === listId).tasks
+
+			let rs = []
+
+			switch (filter_query) {
+				case 'remaining':
+					rs = tasks.filter(task => {
+						return !task.isComplete
+					})
+					break
+				case 'completed':
+					rs = tasks.filter(task => {
+						return task.isComplete
+					})
+					break
+				case 'all':
+					rs = tasks
+					break
+			}
+
+			state.lists.find(list => list.id === listId).curatedTasks = [...rs]
 		}
+
+
 	},
 
 	actions: {
@@ -145,12 +219,18 @@ export default {
 			})
 		},
 
-		GET_TASKS: async ({commit}, payload) => {
+		GET_TASKS: async ({commit}, payload) => { // payload ovde je listId
 			let {data} = await axios.get(`lists/${payload}/tasks`)
 			commit('SET_TASKS', { // prosledjujemo list id jer moramo da znamo kojoj listi ovaj task pripada
 				data,
 				listID: payload
-			}) 
+			})
+
+			let preferences = state.lists.find(list => list.id === payload).preferences
+
+			commit('SORT_LIST_BY', { value: preferences.sortValue, listId: payload })
+
+			commit('FILTER_LIST_BY', { filter_query: preferences.filterValue, listId: payload })
 		},
 
 		POST_TASK: async ({commit}, {listId, taskTitle}) => {
@@ -248,6 +328,13 @@ export default {
 					reject({data, status})
 				}
 			})
+		},
+
+		UPDATE_CURATED_LIST: ({commit, state}, inputValue) => {
+			let rs = state.lists.filter(list => {
+				return list.title.toLowerCase().includes(inputValue)
+			})
+			commit('SET_CURATED_LIST', rs)
 		}
 	}
 }

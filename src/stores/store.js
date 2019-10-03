@@ -4,6 +4,8 @@ import Vuex from 'vuex'
 import UIModule from './modules/ui'
 import User from './modules/user'
 import Data from './modules/data'
+import Search from './modules/search'
+import Preferences from './modules/preferences'
 
 Vue.use(Vuex)
 
@@ -11,7 +13,9 @@ export default new Vuex.Store({
 	modules: {
 		ui: UIModule,
 		user: User,
-		data: Data
+		data: Data,
+		search: Search,
+		preferences: Preferences
 	}
 })
 

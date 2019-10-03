@@ -123,10 +123,20 @@ export default {
 	methods: {
 		sort(value) {
 			console.log("Sort by " + value);
+
+			this.$store.dispatch('SORT_BY', { // preferences.js/actions
+				value,
+				listId: this.$route.params.id
+			})
 		},
 
 		filter(value) {
 			console.log("Filter by " + value);
+
+			this.$store.dispatch('FILTER_BY', { // preferences.js/actions
+				value,
+				listId: this.$route.params.id
+			})
 		},
 
 		openDrawer() {

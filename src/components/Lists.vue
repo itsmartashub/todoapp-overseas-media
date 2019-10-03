@@ -35,7 +35,7 @@
 
 		<v-list style="height: 80vh; overflow-y: scroll">
 			<v-list-item
-				v-for="(list, key) in LISTS"
+				v-for="(list, key) in CURATED_LISTS"
 				v-bind:key="key"
 				:to="{ name: 'tasks', params: {id: list.id} }"
 			>
@@ -173,7 +173,8 @@ export default {
 	}),
 
 	computed: {
-		...mapGetters(['DISPLAY_SEARCH_LIST', 'LISTS']),
+		// ...mapGetters(['DISPLAY_SEARCH_LIST', 'LISTS']),
+		...mapGetters(['DISPLAY_SEARCH_LIST', 'CURATED_LISTS']), // LISTS smo zamenili sa CURATED_LISTS. MOramo gore i u template da LISTS zamenimo sa CURATED_LISTS
 
 		openNewListFormValue: {
 			get () {
