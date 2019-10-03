@@ -3,7 +3,9 @@
 		<v-card style="height: calc(100vh - 36px); overflow: hidden">
 
 			<v-toolbar color="blue" dark>
-				<v-toolbar-title>{{ listTitle }} </v-toolbar-title>
+				<!-- <v-toolbar-title>{{ listTitle }} </v-toolbar-title> -->
+				<!-- Ovo cemo da zamenimo sa EditListTitle.vue komponent -->
+				<EditListTitle :listTitle ="listTitle" />
 
 				<v-spacer></v-spacer>
 
@@ -43,10 +45,11 @@
 import Task from './Task'
 import NewTask from './NewTask'
 import NotesModal from './NotesModal'
+import EditListTitle from './EditListTitle'
 
 export default {
 	name: "tasks",
-	components: { Task, NewTask, NotesModal },
+	components: { Task, NewTask, NotesModal, EditListTitle},
 
 	data: () => ({
 		// tasks: [

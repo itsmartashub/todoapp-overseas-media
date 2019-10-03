@@ -26,6 +26,27 @@ export default {
 			if (index) {
 				return stata.lists.find(list => list.id === index).tasks
 			}
+		},
+
+		TASK_TITLE: state => (listId, taskId) => {
+			if (listId && taskId) {
+				return state.lists
+					.find(list => list.id === listId) // find the list
+					.tasks.find(task => task.id === taskId).title
+			}
+		},
+
+		NOTES: state => (listId, taskId) => {
+			return state.lists
+				.find(list => list.id === listId) // find the list
+				.tasks.find(task => task.id === taskId).notes
+		},
+
+		NOTES_COUNT: state => (listId, taskId) => {
+			// get the length of the notes that i have
+			// state.lists
+			// 	.find(list => list.id === listId) // find the list
+			// 	.tasks.find(task => task.id === taskId).notes.length
 		}
 
 	},
@@ -49,8 +70,53 @@ export default {
 
 		SET_TASK_STATUS: (state, {data, taskID, listID}) => {
 			state.lists
-				.find(list => list.id === listID)
-				.tasks.find(task => task.id === taskID).isComplete = data
+				.find(list => list.id === listID) // find the list
+				.tasks.find(task => task.id === taskID).isComplete = data // find the task and then set its property isCompleted to data
+		},
+
+		SET_NOTES: (state, {data, listID, taskID}) => {
+			state.lists
+				.find(list => list.id === listID) // find the list
+				.tasks.find(task => task.id === taskID).notes = data
+		},
+
+		ADD_NOTE: (state, {data, listId, taskID}) => {
+			state.lists
+				.find(list => list.id === listId) // find the list
+				.tasks.find(task => task.id === taskID)
+				.notes.push(data)
+		},
+
+		REMOVE_NOTE: (state, {noteID, listId, taskID}) => {
+			let notes = state.lists
+				.find(list => list.id === listId) // find the list
+				.tasks.find(task => task.id === taskID).notes
+			
+			let rs = notes.filter(currentNote => { // rs = results. Iz notes zelim da filtriram stvari koje mi NECE trebati, a ono sto mi nece trebati je
+				return currentNote.id !== noteID
+			}) 
+
+			// valjda kao ne mozemo sa notes = [...rs] jer bi notes kor kao varijablu a ne referecu, npm
+			state.lists
+				.find(list => list.id === listId) // find the list
+				.tasks.find(task => task.id === taskID).notes = [...rs]
+		},
+
+		REMOVE_TASK: (state, {taskID, listId}) => {
+			let tasks = state.lists
+				.find(list => list.id === listId).tasks
+
+			let rs = tasks.filter(currentTask => {
+				return currentTask.id !== taskID
+			})
+
+			state.lists.find(list => list.id === listId).tasks = [...rs]
+		},
+
+		UPDATE_TASK_TITLE: (state, {title, listId}) => {
+			if (listId && title) {
+				state.lists.find(list => list.id === listId).title = title
+			}
 		}
 	},
 
@@ -105,6 +171,82 @@ export default {
 				data,
 				taskID,
 				listID
+			})
+		},
+
+		GET_NOTES: async ({commit}, {listID, taskID}) => { // NotesModal.vue
+			let {data} = await axios.get(`tasks/${taskID}/notes`)
+			commit('SET_NOTES', {
+				data, // the notes that i just got from NotesModal.vue
+				listID, // list id so i can look for that list
+				taskID // task id so i can look for the tasks inside the list
+			})
+		},
+
+		POST_NOTE: ({commit}, {note, listId, taskID}) => { // NotesModal.vue
+			return new Promise((resolve, reject) => {
+				axios.post(`tasks/${taskID}/notes`, {
+					note
+				})
+				.then(({data}) => {
+					commit('ADD_NOTE', {
+						data,
+						listId,
+						taskID
+					})
+					resolve(data) // prosledjujemo data or true or whatever
+				})
+				.catch(err => {
+					reject(err)
+				})
+			})
+		},
+
+		DELETE_NOTE: ({commit}, {noteID, listId, taskID}) => {
+			return new Promise((resolve, reject) => {
+				axios.delete(`notes/${noteID}`)
+				.then(({status}) => {
+					if (status === 204) {
+						commit('REMOVE_NOTE', {
+							noteID, listId, taskID
+						})
+
+						resolve(status)
+					}
+				})
+				.catch(err => {
+					reject(err)
+				})
+			})
+		},
+
+		DELETE_TASK: ({commit}, {taskID, listId}) => {
+			return new Promise((resolve, reject) => {
+				axios.delete(`/tasks/${taskID}`)
+				.then(({status}) => {
+					if (status === 204) {
+						commit('REMOVE_TASK', { listId, taskID})
+						resolve(status)
+					}
+				})
+				.catch(err => { reject(err) })
+			})
+		},
+
+		UPDATE_LIST_TITLE: ({commit}, {title, listId}) => {
+			return new Promise(async (resolve, reject) => {
+				let {data, status} = await axios.patch(`lists/${listId}/title`, {
+					title
+				})
+				if (status === 204 || status === 200) {
+					commit('UPDATE_TASK_TITLE', { 
+						listId, title
+					})
+
+					resolve({data, status})
+				} else {
+					reject({data, status})
+				}
 			})
 		}
 	}

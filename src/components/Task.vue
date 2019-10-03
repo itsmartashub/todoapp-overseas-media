@@ -1,7 +1,8 @@
 <template>
 	<v-list-item @click.prevent="toggle(index)" ripple>
 		<v-list-item-action>
-			<v-btn icon @click.prevent="openModal()">
+			<v-btn icon @click.stop="openModal()">
+				<!-- OVO CLICK.STOP, OVO STOP JE ZA STOP PROPAGATION TJ POSTO PARENT OVOGA IMA VEC NEKI CLICK EVENT, I KAD KLIKNEMO NA OVAJ BTN OKINE SE IPAK TAJ CLICK EVENT SA PARENTA, A NE OVAJ OPENMODAL(), PA DA BI OKINULI OPEN MODAL STAVLJAMO OVDE STOP, DA BI VALJDA STOPIRAO DRUGE CLICK EVENTE RECIMO TOG SA PARENTA -->
 				<v-icon color="pink">mdi-pencil</v-icon>
 			</v-btn>
 		</v-list-item-action>
@@ -9,7 +10,8 @@
 		<v-list-item-content>
 			<v-list-item-title>{{ task.title }}</v-list-item-title>
 
-			<v-list-item-subtitle>{{ task.subtitle }}</v-list-item-subtitle>
+			<!-- <v-list-item-subtitle>{{ task.subtitle }}</v-list-item-subtitle> -->
+			<v-list-item-subtitle>This task contains {{ NOTES_COUNT }} notes</v-list-item-subtitle>
 		</v-list-item-content>
 
 		<v-list-item-action-text>
@@ -38,11 +40,21 @@ export default {
 	data: () => ({
 
 	}),
+	
+	computed: {
+		NOTES_COUNT () {
+			return this.task.notes.length
+			// return this.$store.getters.NOTES_COUNT( // data.js/getters
+			// 	this.$route.params.id,
+			// 	this.$route.params.taskID
+			// )
+		}
+	},
 
 	methods: {
 		toggle(i) {
 			// console.log('toggle f-on: ' +i)
-			this.$store.dispatch('TOGGLE_TASK', { // actions
+			this.$store.dispatch('TOGGLE_TASK', { // data.js/actions
 				taskID: this.task.id,
 				listID: this.$route.params.id
 			})
