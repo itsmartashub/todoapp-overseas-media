@@ -45,6 +45,12 @@ export default {
 
 		ADD_TASK: (state, {data, listId}) => {
 			state.lists.find(list => list.id === listID).tasks.push(data)
+		},
+
+		SET_TASK_STATUS: (state, {data, taskID, listID}) => {
+			state.lists
+				.find(list => list.id === listID)
+				.tasks.find(task => task.id === taskID).isComplete = data
 		}
 	},
 
@@ -91,6 +97,15 @@ export default {
 					listId
 				})
 			}
+		},
+
+		TOGGLE_TASK: async ({commit}, {taskID, listID}) => {
+			let {data} = await axios.patch(`tasks/${taskID}/status`)
+			commit('SET_TASK_STATUS', {
+				data,
+				taskID,
+				listID
+			})
 		}
 	}
 }
