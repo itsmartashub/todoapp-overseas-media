@@ -8,12 +8,6 @@ export default {
 	getters: {
 		LISTS: state => {
 			return state.lists
-		}
-	},
-
-	mutations: {
-		SET_LISTS: (state, payload) => {
-			state.lists = payload
 		},
 
 		TASKS_COUNT: state => index => {
@@ -22,8 +16,35 @@ export default {
 			}
 		},
 
+		LIST_TITLE: state => index => { // ovo index mu valjda dodje id od liste koju smo prosledili ovde iz Tasks.vue (this.$route.params.id) 
+			if (index) {
+				return state.lists.find(list => list.id === index).title
+			}
+		},
+
+		TASKS: state => index => {
+			if (index) {
+				return stata.lists.find(list => list.id === index).tasks
+			}
+		}
+
+	},
+
+	mutations: {
+		SET_LISTS: (state, payload) => {
+			state.lists = payload
+		},
+
 		ADD_LIST: (state, payload) => {
 			state.lists.unshift(payload)
+		},
+
+		SET_TASKS: (state, {data, listID}) => {
+			state.lists.find(list => list.id === listID).tasks = data
+		},
+
+		ADD_TASK: (state, {data, listId}) => {
+			state.lists.find(list => list.id === listID).tasks.push(data)
 		}
 	},
 
@@ -50,6 +71,26 @@ export default {
 						reject(err)
 					})
 			})
+		},
+
+		GET_TASKS: async ({commit}, payload) => {
+			let {data} = await axios.get(`lists/${payload}/tasks`)
+			commit('SET_TASKS', { // prosledjujemo list id jer moramo da znamo kojoj listi ovaj task pripada
+				data,
+				listID: payload
+			}) 
+		},
+
+		POST_TASK: async ({commit}, {listId, taskTitle}) => {
+			let {data, status} = await axios.post(`/list/${listId}/tasks`, {
+				title: taskTitle
+			})
+			if (status === 200 ) {
+				commit('ADD_TASK', {
+					data,
+					listId
+				})
+			}
 		}
 	}
 }

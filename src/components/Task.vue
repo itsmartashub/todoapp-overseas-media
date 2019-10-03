@@ -1,5 +1,5 @@
 <template>
-	<v-list-item @click.prevent="toggle(index)">
+	<v-list-item @click.prevent="toggle(index)" ripple>
 		<v-list-item-action>
 			<v-btn icon @click.prevent="openModal()">
 				<v-icon color="pink">mdi-pencil</v-icon>
@@ -41,7 +41,11 @@ export default {
 
 	methods: {
 		toggle(i) {
-			console.log('toggle f-on: ' +i)
+			// console.log('toggle f-on: ' +i)
+			this.$store.dispatch('TOGGLE_TASK', { // actions
+				taskID: this.task.id,
+				listID: this.$route.params.id
+			})
 			// TODO push the changes to the store
 		},
 

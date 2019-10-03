@@ -1,6 +1,6 @@
 <template>
-	<v-form>
-		<v-text-field label="Add a new task" append-icon="mdi-plus" solo>
+	<v-form @submit.prevent="createNewTask()">
+		<v-text-field label="Add a new task" append-icon="mdi-plus" solo v-model="title">
 			dsadsa
 		</v-text-field>
 	</v-form>
@@ -8,6 +8,29 @@
 
 <script>
 export default {
-	name: "newTask"
+	name: "newTask",
+
+	data() {
+		return {
+			title: ''
+		}
+	},
+
+	methods: {
+		async createNewTask() {
+			await this.$store.dispatch('POST_TASK', {
+				listId: this.$route.params.id,
+				taskTitle: this.title
+			})
+
+			this.$store.commit('SET_NOTIFICATION', {
+				display: true,
+				tekst: 'Task has been created!',
+				alertClass: 'success'
+			})
+
+			this.title = ''
+		}
+	}
 }
 </script>
