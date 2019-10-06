@@ -21,14 +21,14 @@ export default {
 	name: 'notification',
 
 	computed: {
-		...mapGetters(['NOTIFICATION']),
+		...mapGetters(['NOTIFICATION']), // ui.js/getters
 
 		snackbar: {
 			get () {
 				return this.$store.getters.NOTIFICATION.display
 			},
 			set (val) {
-				this.$store.commit('SET_NOTIFICATION', {
+				this.$store.commit('SET_NOTIFICATION', { // ui.js/mutations
 					display: false,
 					// tekst: 'ffff',
 					// alertClass: ''

@@ -174,39 +174,39 @@ export default {
 
 	computed: {
 		// ...mapGetters(['DISPLAY_SEARCH_LIST', 'LISTS']),
-		...mapGetters(['DISPLAY_SEARCH_LIST', 'CURATED_LISTS']), // LISTS smo zamenili sa CURATED_LISTS. MOramo gore i u template da LISTS zamenimo sa CURATED_LISTS
+		...mapGetters(['DISPLAY_SEARCH_LIST', 'CURATED_LISTS']), // ui.js/getters, data.js/getters. LISTS smo zamenili sa CURATED_LISTS. MOramo gore i u template da LISTS zamenimo sa CURATED_LISTS
 
 		openNewListFormValue: {
 			get () {
-				return this.$store.getters.NEW_LIST_FORM
+				return this.$store.getters.NEW_LIST_FORM // ui.js/getters
 			},
 			set (val) {
-				this.$store.commit('SET_NEW_LIST_FORM', true)
+				this.$store.commit('SET_NEW_LIST_FORM', val) // ui.js/mutations 
 			}
 		},
 
 		isOpen () { // isOpen ce biti true ili false i apdejtovace se u zavisnosti od vrednosti NEW_LIST_FORM tj da li je otvorena list forma ili ne
-			return this.$store.getters.NEW_LIST_FORM
+			return this.$store.getters.NEW_LIST_FORM // ui.js/getters
 		}
 	},
 
 	methods: {
 		toggleSearchList() {
-			this.$store.commit('SET_DISPLAY_SEARCH_LIST', !this.DISPLAY_SEARCH_LIST)
+			this.$store.commit('SET_DISPLAY_SEARCH_LIST', !this.DISPLAY_SEARCH_LIST) // ui.js/mutations, ui.js/getters
 		},
 
 		openNewListForm() {
-			this.$store.commit('SET_NEW_LIST_FORM', true)
+			this.$store.commit('SET_NEW_LIST_FORM', true) // ui.js/mutations
 		},
 
 		TASKS_COUNT(index) {
-			return this.$store.getters.TASKS_COUNT(index)
+			return this.$store.getters.TASKS_COUNT(index) // data.js/getters
 		}
 	},
 
 	mounted () {
 		// kada je komponenta mounted tj kreirana i ucitana/namontirana onda zelimo da fetchujemo listu korisnika
-		this.$store.dispatch('GET_LISTS')
+		this.$store.dispatch('GET_LISTS') // data.js/actions
 	}
 }
 </script>

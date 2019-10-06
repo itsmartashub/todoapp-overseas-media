@@ -18,7 +18,7 @@ export default {
 
 	methods: {
 		async createNewTask() {
-			await this.$store.dispatch('POST_TASK', {
+			await this.$store.dispatch('POST_TASK', { // data.js/actions
 				listId: this.$route.params.id,
 				taskTitle: this.title
 			})

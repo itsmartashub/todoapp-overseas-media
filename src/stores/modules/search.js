@@ -10,7 +10,7 @@ export default {
 	},
 
 	mutations: {
-		SET_LIST_SEARCH: (state, payload) => {
+		SET_LIST_SEARCH: (state, payload) => { // SearchBar.vue
 			state.listSearch = payload
 		}
 	},

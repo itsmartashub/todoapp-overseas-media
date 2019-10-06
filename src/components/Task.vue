@@ -1,5 +1,6 @@
 <template>
 	<v-list-item @click.prevent="toggle(index)" ripple>
+
 		<v-list-item-action>
 			<v-btn icon @click.stop="openModal()">
 				<!-- OVO CLICK.STOP, OVO STOP JE ZA STOP PROPAGATION TJ POSTO PARENT OVOGA IMA VEC NEKI CLICK EVENT, I KAD KLIKNEMO NA OVAJ BTN OKINE SE IPAK TAJ CLICK EVENT SA PARENTA, A NE OVAJ OPENMODAL(), PA DA BI OKINULI OPEN MODAL STAVLJAMO OVDE STOP, DA BI VALJDA STOPIRAO DRUGE CLICK EVENTE RECIMO TOG SA PARENTA -->
@@ -19,6 +20,7 @@
 			<v-icon color="grey" v-else>mdi-check-circle</v-icon> -->
 			<v-icon :color="task.isComplete ? 'green' : 'grey'" >mdi-check-circle</v-icon>
 		</v-list-item-action-text>
+
 	</v-list-item>
 </template>
 
@@ -31,15 +33,11 @@ export default {
 	// 	'task'
 	// ]
 
-	// drugi, nejgov, nacin
+	// drugi, njegov, nacin
 	props: {
 		task: Object,
 		index: Number
 	},
-
-	data: () => ({
-
-	}),
 	
 	computed: {
 		NOTES_COUNT () {

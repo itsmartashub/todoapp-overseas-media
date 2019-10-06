@@ -35,7 +35,7 @@
 							@change="onFilePicked"
 						/>
 					</v-flex>
-					<!-- onfilePicked/pickFile samo biramo falj za aploud, a sa uploadFile aploudujemo fajl na server -->
+					<!-- onfilePicked/pickFile samo biramo fajl za aploud, a sa uploadFile aploudujemo fajl na server -->
 					<v-btn @click="uploadFile" :loading="loading" :disabled="!imageFile">
 						Set as background
 						<v-icon right dark>mdi-cloud-upload</v-icon>
@@ -60,10 +60,10 @@ export default {
 	computed: { // computed propertiji samo izgledaju kao f-ions ali nisu, koriste se i pozivaju kao data tj podaci
 		open: { // s obz da kor set i get ne stavljamo open() vec open:
 			get () {
-				return this.$store.getters.DRAWER // DRAWER pozivamo bez (). getters mora da se RETURN
+				return this.$store.getters.DRAWER // ui.js/getters. DRAWER pozivamo bez (). getters mora da se RETURN
 			},
 			set (val) {
-				this.$store.commit('SET_DRAWER', val) // ovo ce biti payload u SET_DRAWER
+				this.$store.commit('SET_DRAWER', val) // ui.js/mutations. ovo ce biti payload u SET_DRAWER
 			}
 		}
 	},
@@ -100,6 +100,17 @@ export default {
 
 		uploadFile() {
 			console.log(this.imageFile);
+			this.loading = true;
+			this.$store.dispatch("UPLOAD_BACKGROUND", {
+				listId: this.$route.params.id,
+				file: this.imageFile
+			})
+			.then(response => {
+				this.loading = false
+			})
+			.catch(error => {
+				this.loading = false
+			}) 
 		}
 	}
 }

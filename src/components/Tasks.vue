@@ -18,7 +18,7 @@
 				<template
 					v-for="(task, key) in TASKS"
 				>
-				<!-- Morali smo staviti key u compoennt pvaj <Tasl />, a ne u <template> jer je template samo wrapper -->
+				<!-- Morali smo staviti key u component ovaj <Task />, a ne u <template> jer je template samo wrapper -->
 					<Task v-bind:key="key" :task="task" :index="key"/>
 				</template>
 			</v-list>
@@ -134,16 +134,16 @@ export default {
 		// },
 
 		listTitle () { // idemo gore u template i listID riplejsujemo sa listTitle
-			return this.$store.getters.LIST_TITLE(this.$route.params.id)
+			return this.$store.getters.LIST_TITLE(this.$route.params.id) //data.js/getters
 		},
 		
 		TASKS () { // ovo je computed TASKS, riplejsujemo u template ono tasks iz data sto je, onaj niz
-			return this.$store.getters.TASKS(this.$route.params.id) // a ovo TASKS() je onaj iz data.js iz getters-a
+			return this.$store.getters.TASKS(this.$route.params.id) // data.js/getters. a ovo TASKS() je onaj iz data.js iz getters-a
 		}
 	},
 
 	async mounted() {
-		await this.$store.dispatch('GET_TASKS', this.$route.params.id) // localhost:8000/list/9 (to 9 je id ovaj iz params). ovo GET_TASKS ce da prihvati id nekoig taska, da ga komituje i doda u listu, a ono gore TASKS(this.$route.params.id) ce da dohvata taj task 
+		await this.$store.dispatch('GET_TASKS', this.$route.params.id) // data.js/actions. localhost:8000/list/9 (to 9 je id ovaj iz params). ovo GET_TASKS ce da prihvati id nekoig taska, da ga komituje i doda u listu, a ono gore TASKS(this.$route.params.id) ce da dohvata taj task 
 	}
 }
 </script>

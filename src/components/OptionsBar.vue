@@ -26,7 +26,7 @@
 						active-class
 						v-on="item.action === 'mdi-sort' ? {  click: () => sort(subItem.by) } : { click: () => filter(subItem.by) }"
 					>
-						<!-- ovo je es6 forica. dakle, kada klikenmo na list-item tj ili Sort by ili Filter by, ako je item.action jednako mdi-sort onda na klik event opali sort() metod kom prosledjujemo kao argumente subItem.by tj po cemu da sortira, a ako kliknemo na item koji nije mdi-sort, onda filtriraj po onome po sta smo kliknuli -->
+						<!-- ovo je es6 forica. dakle, kada kliknemo na list-item tj ili Sort by ili Filter by, ako je item.action jednako mdi-sort onda na klik event opali sort() metod kom prosledjujemo kao argumente subItem.by tj po cemu da sortira, a ako kliknemo na item koji nije mdi-sort, onda filtriraj po onome po sta smo kliknuli -->
 						<v-list-item-content>
 							<v-list-item-title>{{ subItem.title }}</v-list-item-title>
 						</v-list-item-content>
@@ -65,6 +65,7 @@
 
 <script>
 import MoreOptions from './MoreOptions'
+
 export default {
 	name: "optionsBar",
 
@@ -116,7 +117,7 @@ export default {
 		},
 
 		drawer () {
-			return this.$store.getters.DRAWER
+			return this.$store.getters.DRAWER // ui.js/ getters
 		}
 	},
 
@@ -144,7 +145,7 @@ export default {
 		},
 
 		displayNotification() {
-			this.$store.commit('SET_NOTIFICATION', {
+			this.$store.commit('SET_NOTIFICATION', { // ui.js/mutations
 				display: true,
 				tekst: 'List removed!',
 				timeout: 3000,

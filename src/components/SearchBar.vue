@@ -27,7 +27,7 @@ export default {
 		},
 
 		closeSearchBar() {
-			this.$store.commit('SET_DISPLAY_SEARCH_LIST', false)
+			this.$store.commit('SET_DISPLAY_SEARCH_LIST', false) // ui.js/mutations
 		}
 	}
 }

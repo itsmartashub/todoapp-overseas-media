@@ -14,7 +14,7 @@ export default {
 			return state.lists
 		},
 
-		CURATED_LISTS: (state, getters, rootState) => { // rootState je ako zelimo da pristupimo root state-u, onom u store.js valjda, pa kao svakom stateu koriscenom u vuexu
+		CURATED_LISTS: (state, getters, rootState) => { // Lists.vue. rootState je ako zelimo da pristupimo root state-u, onom u store.js valjda, pa kao svakom stateu koriscenom u vuexu
 			if (!state.curatedLists.length && rootState.search.listSearch === '') { // umesto .search.listSearch smo mogli. rootGetters.LIST_SEARCH valjda. Elem ovo prvo if znaci da akoje curatedLists prazna, i ako nemam neku search vrednost onda mi samo daj listu svih tj state.lists
 				return state.lists
 
@@ -26,26 +26,26 @@ export default {
 			}
 		},
 
-		TASKS_COUNT: state => index => {
+		TASKS_COUNT: state => index => { // Lists.vue
 			if (index) {
 				return state.lists.find(list => list.id === index).tasks.length // find by something, and i want to find by index (index of the list). find ide kroz sve liste koje korisnik ima, a mi trazimo da list.id bude isti kao index, za tu listu zelim da dohvatim tasks, tj koliko ima tasks (tasks.length)
 			}
 		},
 
-		LIST_TITLE: state => index => { // ovo index mu valjda dodje id od liste koju smo prosledili ovde iz Tasks.vue (this.$route.params.id) 
+		LIST_TITLE: state => index => { // Tasks.vue. ovo index mu valjda dodje id od liste koju smo prosledili ovde iz Tasks.vue (this.$route.params.id) 
 			if (index) {
 				return state.lists.find(list => list.id === index).title
 			}
 		},
 
-		TASKS: state => index => {
+		TASKS: state => index => { // Tasks.vue
 			if (index) {
 				// return stata.lists.find(list => list.id === index).tasks
 				return stata.lists.find(list => list.id === index).curatedTasks
 			}
 		},
 
-		TASK_TITLE: state => (listId, taskId) => {
+		TASK_TITLE: state => (listId, taskId) => { // NotesModal.vue
 			if (listId && taskId) {
 				return state.lists
 					.find(list => list.id === listId) // find the list
@@ -53,10 +53,16 @@ export default {
 			}
 		},
 
-		NOTES: state => (listId, taskId) => {
+		NOTES: state => (listId, taskId) => { // NotesModal.vue
 			return state.lists
 				.find(list => list.id === listId) // find the list
 				.tasks.find(task => task.id === taskId).notes
+		},
+
+		LIST_BACKGROUND: state => index => { // Todo.vue
+			if (index) {
+				return state.lists.find(list => list.id === index).backgroundPath;
+			}
 		}
 
 	},
@@ -66,7 +72,7 @@ export default {
 			state.lists = payload
 		},
 
-		ADD_LIST: (state, payload) => {
+		ADD_LIST: (state, payload) => { // action in POST_TITLE
 			state.lists.unshift(payload)
 		},
 
@@ -74,12 +80,12 @@ export default {
 		// 	state.lists.find(list => list.id === listID).tasks = data
 		// },
 		
-		SET_TASKS: (state, {data, listID}) => {
+		SET_TASKS: (state, {data, listID}) => { // in actions in GET_TASKS
 			Vue.set(state.lists.find(list => list.id === listID), 'curatedTasks', data) // object, key string ili number, value
 			state.lists.find(list => list.id === listID).tasks = data
 		},
 
-		ADD_TASK: (state, {data, listId}) => {
+		ADD_TASK: (state, {data, listId}) => { // in actions in POST_TASK
 			state.lists.find(list => list.id === listID).tasks.push(data)
 		},
 
@@ -117,9 +123,8 @@ export default {
 				.tasks.find(task => task.id === taskID).notes = [...rs]
 		},
 
-		REMOVE_TASK: (state, {taskID, listId}) => {
-			let tasks = state.lists
-				.find(list => list.id === listId).tasks
+		REMOVE_TASK: (state, {taskID, listId}) => { // actions
+			let tasks = state.lists.find(list => list.id === listId).tasks
 
 			let rs = tasks.filter(currentTask => {
 				return currentTask.id !== taskID
@@ -138,11 +143,11 @@ export default {
 			state.curatedLists = payload
 		},
 
-		SET_LIST_SORT_VALUE: (state, {value, listId}) => {
+		SET_LIST_SORT_VALUE: (state, {value, listId}) => { // preferences.js/actions
 			state.lists.find(list => list.id === listId).preferences.sortValue = value // ovo preferences.sortValue je iz backenda njegovog restful api-a
 		},
 
-		SORT_LIST_BY: (state, {value, listId}) => {
+		SORT_LIST_BY: (state, {value, listId}) => { // preferences.js/actions
 			let tasks = state.lists.find(list => list.id === listId).tasks
 
 			let rs = []
@@ -163,11 +168,11 @@ export default {
 			state.lists.find(list => list.id === listId).curatedTasks = [...rs]
 		},
 
-		SET_LIST_FILTER_VALUE: (state, {value, listId}) => {
+		SET_LIST_FILTER_VALUE: (state, {value, listId}) => { // preferences.js/actions
 			state.lists.find(list => list.id === listId).preferences.filterValue = value // ovo preferences.filterValue je iz backenda njegovog restful api-a
 		},
 
-		FILTER_LIST_BY: (state, {filter_query, listId}) => {
+		FILTER_LIST_BY: (state, {filter_query, listId}) => { // preferences.js/actions
 			let tasks = state.lists.find(list => list.id === listId).tasks
 
 			let rs = []
@@ -189,25 +194,28 @@ export default {
 			}
 
 			state.lists.find(list => list.id === listId).curatedTasks = [...rs]
-		}
+		},
 
+		SET_BACKGROUND: (state, { listId, url }) => { // preferences.js/actions
+			state.lists.find(list => list.id === listId).backgroundPath = url;
+		},
 
 	},
 
 	actions: {
-		GET_LISTS: async ({commit}) => {
+		GET_LISTS: async ({commit}) => { // Lists.vue
 			let {data} = await axios.get(`lists`)
 			console.log(data)
 			commit('SET_LISTS', data)
 		},
 
-		POST_LIST: ({commit}, payload) => {
+		POST_LIST: ({commit}, payload) => { // NewList.vue
 			return new Promise((resolve, reject) => {
 				axios.post(`lists`, payload)
 					.then(({data, status}) => {
 						console.log(data, status)
 						resolve({data, status})
-						commit('ADD_LIST', data)
+						commit('ADD_LIST', data) // mutations
 
 						if (status === 200 ) {
 							resolve({data, status})
@@ -219,8 +227,9 @@ export default {
 			})
 		},
 
-		GET_TASKS: async ({commit}, payload) => { // payload ovde je listId
+		GET_TASKS: async ({commit}, payload) => { // Tasks.vue. payload ovde je listId
 			let {data} = await axios.get(`lists/${payload}/tasks`)
+
 			commit('SET_TASKS', { // prosledjujemo list id jer moramo da znamo kojoj listi ovaj task pripada
 				data,
 				listID: payload
@@ -233,21 +242,22 @@ export default {
 			commit('FILTER_LIST_BY', { filter_query: preferences.filterValue, listId: payload })
 		},
 
-		POST_TASK: async ({commit}, {listId, taskTitle}) => {
+		POST_TASK: async ({commit}, {listId, taskTitle}) => { // NewTask.vue
 			let {data, status} = await axios.post(`/list/${listId}/tasks`, {
 				title: taskTitle
 			})
 			if (status === 200 ) {
-				commit('ADD_TASK', {
+				commit('ADD_TASK', { // mutations
 					data,
 					listId
 				})
 			}
 		},
 
-		TOGGLE_TASK: async ({commit}, {taskID, listID}) => {
+		TOGGLE_TASK: async ({commit}, {taskID, listID}) => { // Yask.vue
 			let {data} = await axios.patch(`tasks/${taskID}/status`)
-			commit('SET_TASK_STATUS', {
+
+			commit('SET_TASK_STATUS', { // mutations
 				data,
 				taskID,
 				listID
@@ -300,12 +310,12 @@ export default {
 			})
 		},
 
-		DELETE_TASK: ({commit}, {taskID, listId}) => {
+		DELETE_TASK: ({commit}, {taskID, listId}) => { // NotesModal.vue
 			return new Promise((resolve, reject) => {
 				axios.delete(`/tasks/${taskID}`)
 				.then(({status}) => {
 					if (status === 204) {
-						commit('REMOVE_TASK', { listId, taskID})
+						commit('REMOVE_TASK', { listId, taskID}) // mutations
 						resolve(status)
 					}
 				})
@@ -330,11 +340,11 @@ export default {
 			})
 		},
 
-		UPDATE_CURATED_LIST: ({commit, state}, inputValue) => {
+		UPDATE_CURATED_LIST: ({commit, state}, inputValue) => { //SearchBar.vue
 			let rs = state.lists.filter(list => {
 				return list.title.toLowerCase().includes(inputValue)
 			})
-			commit('SET_CURATED_LIST', rs)
+			commit('SET_CURATED_LIST', rs) // data.js/mutations
 		}
 	}
 }

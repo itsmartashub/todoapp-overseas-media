@@ -1,5 +1,5 @@
 <template>
-	<div style="height: 100%; max-height: 96.6vh;">
+	<div v-bind:style="{ height: '100%', maxHeight: '96.6vh', backgroundSize: 'cover', backgroundImage: `url(${background})` }">
 		<v-container fluid fill-height pl-0 pr-0 pt-0 pb-0>
 			<v-layout row align-content-space-between justify-space-between>
 				<v-flex lg3 pr-2>
@@ -42,10 +42,14 @@ import Notification from './Notification'
 
 export default {
 	name: "todo",
-	components: { Lists, Tasks, OptionsBar, Notification }
+	components: { Lists, Tasks, OptionsBar, Notification },
+
+	computed: {
+		background () {
+			return this.$store.getters.LIST_BACKGROUND( // data.js/getters
+				this.$route.params.id
+			)
+		}
+	}
 }
 </script>
-
-<style>
-
-</style>

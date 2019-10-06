@@ -108,7 +108,7 @@ export default {
 		
 		register() {
 			if(this.valid()) {
-				this.$store.dispatch('REGISTER', {
+				this.$store.dispatch('REGISTER', { // user.js/actions
 					username: this.username,
 					email: this.email,
 					password: this.password

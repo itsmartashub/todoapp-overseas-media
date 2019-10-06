@@ -28,12 +28,12 @@ export default {
 	methods: {
 		submit() {
 			// console.log("submitted");
-			this.$store.dispatch('POST_LIST', {
+			this.$store.dispatch('POST_LIST', { // data.js/actions
 				title: this.title
 			})
 			// .then(response => {
 			.then(({ data }) => {
-				this.$store.commit('SET_NOTIFICATION', {
+				this.$store.commit('SET_NOTIFICATION', { // ui.js/mutations
 					display: true,
 					tekst: 'List has been created!',
 					alertClass: 'success'
@@ -48,12 +48,12 @@ export default {
 					}
 				})
 
-				this.$store.commit('SET_NEW_LIST_FORM', false)
+				this.$store.commit('SET_NEW_LIST_FORM', false) // ui.js/mutations
 			})
 		},
 
 		closeForm() {
-			this.$store.commit('SET_NEW_LIST_FORM', false)
+			this.$store.commit('SET_NEW_LIST_FORM', false) // ui.js/mutations
 		}
 	},
 

@@ -1,6 +1,7 @@
 <template>
 	<v-layout row justify-center="">
 		<v-dialog v-model="open" max-width="60%" scrollable>
+
 			<v-card>
 				<v-card-title>
 					<!-- <span class="headline">Task title</span> -->
@@ -226,7 +227,3 @@ export default {
 	},
 }
 </script>
-
-<style>
-
-</style>

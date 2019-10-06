@@ -8,7 +8,7 @@ export default {
 	mutations: {},
 
 	actions: {
-		LOGIN: ({commit}, payload) => {
+		LOGIN: ({commit}, payload) => { // Login.vue
 			return new Promise((resolve, reject) => {
 				axios.post(`login_check`, payload)
 					.then(({data, status}) => { // iz responsa uzimamo samo data i status
@@ -22,7 +22,7 @@ export default {
 			})
 		},
 
-		REGISTER: ({commit}, {username, email, password}) => {
+		REGISTER: ({commit}, {username, email, password}) => { // register.vue
 			return new Promise((resolve, reject) => {
 				axios.post(`register`, {
 					username, email, password

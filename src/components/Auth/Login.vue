@@ -55,7 +55,7 @@ export default {
 	methods: {
 		login() {
 			// this.$router.push('/')
-			this.$store.dispatch('LOGIN', {
+			this.$store.dispatch('LOGIN', { // user.js/actions
 				username: this.username,
 				password: this.password
 			})
